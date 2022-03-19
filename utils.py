@@ -1,3 +1,7 @@
+import math
+import numpy as np
+
+from random import randrange
 from csv import reader
 
 def load_csv(filename):
@@ -25,6 +29,12 @@ def str_column_to_int(dataset, column):
     
     return lookup
 
+def train_test_split(dataset, split=0.2):
+    train, test = [], []
+    idxs_train, idxs_test = [], []
+    len_train = math.floor((1 - split) * len(dataset))
+    len_test = len(dataset) - len_train
 
-
+    idxs_train = np.random.choice(len(dataset), len_train)
+    print(idxs_train, len(idxs_train))
 

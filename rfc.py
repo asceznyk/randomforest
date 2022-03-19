@@ -1,6 +1,8 @@
 from random import seed, randrange
 from csv import reader
-from math import sqrt
+from math import sqrt, floor
+
+inf = 999
 
 def class_values(dataset):
     return list(set(row[-1] for row in dataset))
@@ -36,7 +38,7 @@ def count_classify(group):
 
 def best_split(dataset, n_features):
     classes = class_values(dataset)
-    b_attr, b_value, b_score, b_groups = 999, 999, 999, None
+    b_attr, b_value, b_score, b_groups = inf, inf, inf, None
 
     features = []
     while len(features) < n_features:
@@ -82,9 +84,22 @@ def build_tree(dataset, n_features,  min_size, max_depth):
     binary_split(root, n_features, min_size, max_depth, 1)
     return root
 
+def predict(node, row):
+    if row[node['attr']] < node['value']:
+        node = node['left']
+        if isinstance(node, int): return node
+        return predict(node, row)
+    else:
+        node = node['right']
+        if isinstance(node, int): return node
+        return predict(node, row)
 
+def random_forest(dataset, n_estimators, max_depth, n_features, min_size):
+    trees = []
+    for i in range(n_estimators):
+        tree = build_tree(dataset, n_features, min_size, max_depth)
+        trees.append(tree)
 
-
-
+    return trees
 
 
