@@ -12,7 +12,7 @@ str_column_to_int(dataset, len(dataset[0])-1)
 
 n_features = len(dataset[0])-1
 tree = build_tree(dataset, n_features, 1, 10)
-print(predict(tree, dataset[0]), predict(tree, dataset[1]))
+print(bag([tree], dataset[0]), bag([tree], dataset[1]))
 
 #train, test = train_test_split(dataset)
 #print(len(train), len(test))

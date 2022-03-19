@@ -94,6 +94,10 @@ def predict(node, row):
         if isinstance(node, int): return node
         return predict(node, row)
 
+def bag(trees, row):
+    predictions = [predict(tree, row)  for tree in trees]
+    return max(set(predictions), key=predictions.count)
+
 def random_forest(dataset, n_estimators, max_depth, n_features, min_size):
     trees = []
     for i in range(n_estimators):
