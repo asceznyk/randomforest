@@ -34,7 +34,7 @@ def gini_index(groups, classes):
 
 def count_classify(group):
     outcomes = [row[-1] for row in group]
-    return max(set(outcomes), key=outcomes.count)
+    return float(max(set(outcomes), key=outcomes.count))
 
 def best_split(dataset, n_features):
     classes = class_values(dataset)
@@ -84,26 +84,27 @@ def build_tree(dataset, n_features,  min_size, max_depth):
     binary_split(root, n_features, min_size, max_depth, 1)
     return root
 
+def random_forest(dataset, n_estimators=1, max_depth=2, n_features=1, min_size=1):
+    forest = []
+    for i in range(n_estimators):
+        tree = build_tree(dataset, n_features, min_size, max_depth)
+        forest.append(tree)
+
+    return forest
+
 def predict(node, row):
     if row[node['attr']] < node['value']:
         node = node['left']
-        if isinstance(node, int): return node
+        if isinstance(node, float): 
+            return node
         return predict(node, row)
     else:
         node = node['right']
-        if isinstance(node, int): return node
+        if isinstance(node, float):
+            return node
         return predict(node, row)
 
-def bag(trees, row):
-    predictions = [predict(tree, row)  for tree in trees]
+def bag(forest, row):
+    predictions = [predict(tree, row) for tree in forest]
     return max(set(predictions), key=predictions.count)
-
-def random_forest(dataset, n_estimators, max_depth, n_features, min_size):
-    trees = []
-    for i in range(n_estimators):
-        tree = build_tree(dataset, n_features, min_size, max_depth)
-        trees.append(tree)
-
-    return trees
-
 
