@@ -4,9 +4,6 @@ from math import sqrt, floor
 
 inf = 999
 
-def class_values(dataset):
-    return list(set(row[-1] for row in dataset))
-
 def attr_split(attr, value, dataset):
     left, right = [], []
     for row in dataset:
@@ -37,7 +34,7 @@ def count_classify(group):
     return float(max(set(outcomes), key=outcomes.count))
 
 def best_split(dataset, n_features):
-    classes = class_values(dataset)
+    classes = list(set(row[-1] for row in dataset))
     b_attr, b_value, b_score, b_groups = inf, inf, inf, None
 
     features = []
@@ -95,13 +92,11 @@ def random_forest(dataset, n_estimators=1, max_depth=2, n_features=1, min_size=1
 def predict(node, row):
     if row[node['attr']] < node['value']:
         node = node['left']
-        if isinstance(node, float): 
-            return node
+        if isinstance(node, float): return node
         return predict(node, row)
     else:
         node = node['right']
-        if isinstance(node, float):
-            return node
+        if isinstance(node, float): return node
         return predict(node, row)
 
 def bag(forest, row):
